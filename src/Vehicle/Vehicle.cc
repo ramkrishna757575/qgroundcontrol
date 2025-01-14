@@ -4000,13 +4000,13 @@ void Vehicle::_handleMessageInterval(const mavlink_message_t& message)
 void Vehicle::requestOperatorControl(bool allowOverride, int requestTimeoutSecs)
 {
     int safeRequestTimeoutSecs;
-    int requestTimeoutSecsMin = _settingsManager->flyViewSettings()->requestControlTimeout()->cookedMin().toInt();
-    int requestTimeoutSecsMax = _settingsManager->flyViewSettings()->requestControlTimeout()->cookedMax().toInt();
+    int requestTimeoutSecsMin = SettingsManager::instance()->flyViewSettings()->requestControlTimeout()->cookedMin().toInt();
+    int requestTimeoutSecsMax = SettingsManager::instance()->flyViewSettings()->requestControlTimeout()->cookedMax().toInt();
     if (requestTimeoutSecs > requestTimeoutSecsMin && requestTimeoutSecs < requestTimeoutSecsMax) {
         safeRequestTimeoutSecs = requestTimeoutSecs;
     } else {
         // If out of limits use default value
-        safeRequestTimeoutSecs = _settingsManager->flyViewSettings()->requestControlTimeout()->cookedDefaultValue().toInt();
+        safeRequestTimeoutSecs = SettingsManager::instance()->flyViewSettings()->requestControlTimeout()->cookedDefaultValue().toInt();
     }
     sendMavCommand(_defaultComponentId,
                    MAV_CMD(32100),          // MAV_CMD_REQUEST_OPERATOR_CONTROL
@@ -4055,7 +4055,7 @@ void Vehicle::_handleCommandLong(const mavlink_message_t& message)
     mavlink_command_long_t commandLong;
     mavlink_msg_command_long_decode(&message, &commandLong);
     // Ignore command if it is not targeted for us
-    if (commandLong.target_system != _mavlink->getSystemId()) {
+    if (commandLong.target_system != MAVLinkProtocol::instance()->getSystemId()) {
         return;
     }
     if (commandLong.command == MAV_CMD(32100)) { // MAV_CMD_REQUEST_OPERATOR_CONTROL
