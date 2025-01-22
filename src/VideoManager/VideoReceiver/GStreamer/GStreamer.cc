@@ -110,15 +110,17 @@ static void _setGstEnvVars()
     qCDebug(GStreamerLog) << "App Directory:" << currentDir;
 
 #if defined(Q_OS_MACOS) && defined(QGC_GST_MACOS_FRAMEWORK)
+#if 0
     _qgcputenv("GST_REGISTRY_REUSE_PLUGIN_SCANNER", "no");
-    _qgcputenv("GST_PLUGIN_SCANNER", currentDir, "/../Frameworks/GStreamer.framework/Versions/1.0/libexec/gstreamer-1.0/gst-plugin-scanner");
-    _qgcputenv("GST_PTP_HELPER_1_0", currentDir, "/../Frameworks/GStreamer.framework/Versions/1.0/libexec/gstreamer-1.0/gst-ptp-helper");
-    _qgcputenv("GIO_EXTRA_MODULES", currentDir, "/../Frameworks/GStreamer.framework/Versions/1.0/lib/gio/modules");
-    _qgcputenv("GST_PLUGIN_SYSTEM_PATH_1_0", currentDir, "/../Frameworks/GStreamer.framework/Versions/1.0/lib/gstreamer-1.0"); // PlugIns/gstreamer
-    _qgcputenv("GST_PLUGIN_SYSTEM_PATH", currentDir, "/../Frameworks/GStreamer.framework/Versions/1.0/lib/gstreamer-1.0");
-    _qgcputenv("GST_PLUGIN_PATH_1_0", currentDir, "/../Frameworks/GStreamer.framework/Versions/1.0/lib/gstreamer-1.0");
-    _qgcputenv("GST_PLUGIN_PATH", currentDir, "/../Frameworks/GStreamer.framework/Versions/1.0/lib/gstreamer-1.0");
-    _qgcputenv("GTK_PATH", currentDir, "/../Frameworks/GStreamer.framework/Versions/1.0");
+    _qgcputenv("GST_PLUGIN_SCANNER", currentDir, "/Library/Frameworks/GStreamer.framework/Versions/1.0/libexec/gstreamer-1.0/gst-plugin-scanner");
+    _qgcputenv("GST_PTP_HELPER_1_0", currentDir, "/Library/Frameworks/GStreamer.framework/Versions/1.0/libexec/gstreamer-1.0/gst-ptp-helper");
+    _qgcputenv("GIO_EXTRA_MODULES", currentDir, "/Library/Frameworks/GStreamer.framework/Versions/1.0/lib/gio/modules");
+    _qgcputenv("GST_PLUGIN_SYSTEM_PATH_1_0", currentDir, "/Library/Frameworks/GStreamer.framework/Versions/1.0/lib/gstreamer-1.0"); // PlugIns/gstreamer
+    _qgcputenv("GST_PLUGIN_SYSTEM_PATH", currentDir, "/Library/Frameworks/GStreamer.framework/Versions/1.0/lib/gstreamer-1.0");
+    _qgcputenv("GST_PLUGIN_PATH_1_0", currentDir, "/Library/Frameworks/GStreamer.framework/Versions/1.0/lib/gstreamer-1.0");
+    _qgcputenv("GST_PLUGIN_PATH", currentDir, "/Library/Frameworks/GStreamer.framework/Versions/1.0/lib/gstreamer-1.0");
+    _qgcputenv("GTK_PATH", currentDir, "/Library/Frameworks/GStreamer.framework/Versions/1.0");
+#endif
 #elif defined(Q_OS_WIN)
     _qgcputenv("GST_REGISTRY_REUSE_PLUGIN_SCANNER", "no");
     _qgcputenv("GST_PLUGIN_SCANNER", currentDir, "/../libexec/gstreamer-1.0/gst-plugin-scanner");

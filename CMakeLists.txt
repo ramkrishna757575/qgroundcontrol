@@ -538,23 +538,28 @@ install(
     BUNDLE  DESTINATION .
 )
 
-set(deploy_tool_options_arg "")
-if(MACOS)
-    if(MACOS_SIGNING_IDENTITY)
-        message(STATUS "Signing MacOS Bundle")
-        set(deploy_tool_options_arg -qmldir=${CMAKE_SOURCE_DIR} -verbose=2 -sign-for-notarization=${MACOS_SIGNING_IDENTITY}) # -dmg
+if(NOT MACOS)
+    set(deploy_tool_options_arg "")
+    if(MACOS)
+        if(MACOS_SIGNING_IDENTITY)
+            message(STATUS "Signing MacOS Bundle")
+            set(deploy_tool_options_arg -qmldir=${CMAKE_SOURCE_DIR} -verbose=2 -sign-for-notarization=${MACOS_SIGNING_IDENTITY}) # -dmg
+        endif()
     endif()
-endif()
 
-qt_generate_deploy_qml_app_script(
-    TARGET ${CMAKE_PROJECT_NAME}
-    OUTPUT_SCRIPT deploy_script
-    DEPLOY_TOOL_OPTIONS ${deploy_tool_options_arg}
-    MACOS_BUNDLE_POST_BUILD
-    NO_UNSUPPORTED_PLATFORM_ERROR
-    DEPLOY_USER_QML_MODULES_ON_UNSUPPORTED_PLATFORM
-)
-install(SCRIPT ${deploy_script})
+    qt_generate_deploy_qml_app_script(
+        TARGET ${CMAKE_PROJECT_NAME}
+        OUTPUT_SCRIPT deploy_script
+        DEPLOY_TOOL_OPTIONS ${deploy_tool_options_arg}
+        MACOS_BUNDLE_POST_BUILD
+        NO_UNSUPPORTED_PLATFORM_ERROR
+        DEPLOY_USER_QML_MODULES_ON_UNSUPPORTED_PLATFORM
+    )
+    install(SCRIPT ${deploy_script})
+else()
+    install(CODE "execute_process(COMMAND /Users/Don/Qt/6.8.1/macos/bin/macdeployqt ${CMAKE_PROJECT_NAME}.app -appstore-compliant -verbose=1 -qmldir=${CMAKE_SOURCE_DIR})")
+    install(CODE "execute_process(COMMAND codesign --force --deep -s - ${CMAKE_PROJECT_NAME}.app)")
+endif()
 
 if(ANDROID)
     # get_target_property(QGC_ANDROID_DEPLOY_FILE ${CMAKE_PROJECT_NAME} QT_ANDROID_DEPLOYMENT_SETTINGS_FILE)
@@ -591,7 +596,6 @@ elseif(LINUX)
 elseif(WIN32)
     install(SCRIPT "${CMAKE_SOURCE_DIR}/cmake/CreateWinInstaller.cmake")
 elseif(MACOS)
-    install(CODE "set(OSXRELOCATOR ${CMAKE_SOURCE_DIR}/deploy/macos/osxrelocator.py)")
     install(CODE "set(TARGET_NAME ${QGC_APP_NAME})")
     install(SCRIPT "${CMAKE_SOURCE_DIR}/cmake/CreateMacDMG.cmake")
 endif()

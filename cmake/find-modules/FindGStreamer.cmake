@@ -43,14 +43,12 @@ if(WIN32)
         --define-variable=includedir=${INCLUDE_PATH}
     )
 elseif(MACOS)
-    list(APPEND CMAKE_FRAMEWORK_PATH "/Library/Frameworks")
-    set(GSTREAMER_FRAMEWORK_PATH "/Library/Frameworks/GStreamer.framework" CACHE PATH "GStreamer Framework Path")
-    set(GSTREAMER_PREFIX "${GSTREAMER_FRAMEWORK_PATH}/Versions/1.0")
+    set(GSTREAMER_PREFIX "/opt/homebrew/Cellar/gstreamer/1.24.11")
     find_program(PKG_CONFIG_PROGRAM pkg-config PATHS ${GSTREAMER_PREFIX}/bin NO_DEFAULT_PATH)
     if(PKG_CONFIG_PROGRAM)
         set(PKG_CONFIG_EXECUTABLE ${PKG_CONFIG_PROGRAM})
     endif()
-    set(ENV{PKG_CONFIG_PATH} "${GSTREAMER_PREFIX}/lib/pkgconfig:${GSTREAMER_PREFIX}/lib/gstreamer-1.0/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+    set(ENV{PKG_CONFIG_PATH} "${GSTREAMER_PREFIX}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 elseif(LINUX)
     set(GSTREAMER_PREFIX "/usr")
     set(ENV{PKG_CONFIG_PATH} "${GSTREAMER_PREFIX}/lib/x86_64-linux-gnu/pkgconfig:${GSTREAMER_PREFIX}/lib/x86_64-linux-gnu/gstreamer-1.0/pkgconfig:$ENV{PKG_CONFIG_PATH}")
@@ -483,23 +481,6 @@ if(GlWayland IN_LIST GStreamer_FIND_COMPONENTS)
     endif()
 endif()
 
-if(GlX11 IN_LIST GStreamer_FIND_COMPONENTS)
-    find_gstreamer_component(GlX11
-        PC_NAME gstreamer-gl-x11-1.0
-        HEADER gst/gl/x11/x11.h
-        LIBRARY gstgl-1.0
-        DEPENDENCIES GStreamer::Gl)
-
-    if(TARGET GStreamer::GlX11)
-        # find_package(X11 QUIET)
-        # find_package(XCB QUIET)
-        find_package(X11_XCB QUIET)
-        if(TARGET X11::XCB)
-            target_link_libraries(GStreamer::GlX11 INTERFACE X11::XCB)
-        endif()
-    endif()
-endif()
-
 if(Mpegts IN_LIST GStreamer_FIND_COMPONENTS)
     find_gstreamer_component(Mpegts
         PC_NAME gstreamer-mpegts-1.0
@@ -659,19 +640,15 @@ endif()
 target_include_directories(GStreamer::GStreamer
     INTERFACE
         ${GSTREAMER_PREFIX}/include
-        ${GSTREAMER_PREFIX}/include/glib-2.0
+        #${GSTREAMER_PREFIX}/include/glib-2.0
         # ${GSTREAMER_PREFIX}/include/graphene-1.0
         ${GSTREAMER_PREFIX}/include/gstreamer-1.0
-        ${GSTREAMER_LIB_PATH}/glib-2.0/include
+        #${GSTREAMER_LIB_PATH}/glib-2.0/include
         # ${GSTREAMER_LIB_PATH}/graphene-1.0/include
-        ${GSTREAMER_LIB_PATH}/gstreamer-1.0/include
+        #${GSTREAMER_LIB_PATH}/gstreamer-1.0/include
 )
 
 target_link_directories(GStreamer::GStreamer INTERFACE ${GSTREAMER_LIB_PATH})
-
-if(MACOS AND EXISTS ${GSTREAMER_FRAMEWORK_PATH})
-    target_link_libraries(GStreamer::GStreamer INTERFACE "-F /Library/Frameworks -framework GStreamer")
-endif()
 
 ################################################################################
 
@@ -737,9 +714,7 @@ foreach(plugin IN LISTS GST_PLUGINS)
     endif()
 endforeach()
 
-if(NOT MACOS)
-    target_link_libraries(GStreamer::GStreamer INTERFACE GStreamer::Plugins)
-endif()
+target_link_libraries(GStreamer::GStreamer INTERFACE GStreamer::Plugins)
 
 ################################################################################
 
