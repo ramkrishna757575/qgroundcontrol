@@ -653,9 +653,10 @@ ApplicationWindow {
     //-------------------------------------------------------------------------
     //-- Indicator Drawer
 
-    function showIndicatorDrawer(drawerComponent, indicatorItem) {
+    function showIndicatorDrawer(drawerComponent, indicatorItem, dim = true) {
         indicatorDrawer.sourceComponent = drawerComponent
         indicatorDrawer.indicatorItem = indicatorItem
+        indicatorDrawer.dim = dim
         indicatorDrawer.open()
     }
 
@@ -676,6 +677,7 @@ ApplicationWindow {
         modal:          true
         focus:          true
         closePolicy:    Popup.CloseOnEscape | Popup.CloseOnPressOutside
+        dim:            false
 
         property var sourceComponent
         property var indicatorItem
