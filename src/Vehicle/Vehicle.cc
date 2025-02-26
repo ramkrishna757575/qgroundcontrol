@@ -652,10 +652,8 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         break;
     }
     case MAVLINK_MSG_ID_CONTROL_STATUS:
-    {
         _handleControlStatus(message);
         break;   
-    }
     case MAVLINK_MSG_ID_COMMAND_LONG:
     {
         _handleCommandLong(message);
