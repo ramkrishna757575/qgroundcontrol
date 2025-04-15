@@ -122,7 +122,7 @@ Item {
         anchors.right:              parent.right
         width:                      _rightPanelWidth
         spacing:                    _toolsMargin
-        visible:                    QGroundControl.corePlugin.options.flyView.showInstrumentPanel && multiVehiclePanelSelector.showSingleVehiclePanel
+        visible:                    false
         availableHeight:            parent.height - y - _toolsMargin
 
         property real rightEdgeTopInset: visible ? parent.width - x : 0
@@ -167,7 +167,7 @@ Item {
 
         property real bottomEdgeCenterInset: 0
         property real rightEdgeCenterInset: 0
-
+        visible:                    false
         // States for custom layout support
         states: [
             State {
@@ -276,7 +276,7 @@ Item {
         anchors.top:            parent.top
         z:                      QGroundControl.zOrderWidgets
         maxHeight:              parent.height - y - parentToolInsets.bottomEdgeLeftInset - _toolsMargin
-        visible:                !QGroundControl.videoManager.fullScreen
+        visible:                false
 
         onDisplayPreFlightChecklist: preFlightChecklistPopup.createObject(mainWindow).open()
 
